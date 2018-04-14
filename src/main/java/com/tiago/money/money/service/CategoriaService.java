@@ -16,4 +16,18 @@ public class CategoriaService {
     public List<Categoria> searchAll() {
         return this.categoriaRepository.findAll();
     }
+
+    public Categoria findOne(Long id) throws Exception {
+        Categoria category = this.categoriaRepository.getOne(id);
+
+        if (category == null) {
+            throw new Exception("Category not found!");
+        }
+
+        return category;
+    }
+
+    public Categoria save(Categoria newCategoria) {
+        return this.categoriaRepository.save(newCategoria);
+    }
 }
