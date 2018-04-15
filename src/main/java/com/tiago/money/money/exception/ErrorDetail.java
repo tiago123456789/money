@@ -1,10 +1,12 @@
 package com.tiago.money.money.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorDetail {
 
     private Integer status;
     private long timeStamp;
-    private String cause;
     private String messageUsuario;
     private String messageDesenvolvedor;
 
@@ -22,14 +24,6 @@ public class ErrorDetail {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
-    }
-
-    public String getCause() {
-        return cause;
-    }
-
-    public void setCause(String cause) {
-        this.cause = cause;
     }
 
     public String getMessageUsuario() {

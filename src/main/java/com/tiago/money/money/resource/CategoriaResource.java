@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class CategoriaResource {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Categoria newCategoria) {
+    public ResponseEntity<?> save(@Valid @RequestBody Categoria newCategoria) {
         Categoria categorySaved = this.categoriaService.save(newCategoria);
 
         URI uri = ServletUriComponentsBuilder
