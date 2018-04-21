@@ -46,4 +46,10 @@ public class PessoaResource {
         this.pessoaService.atualizar(id, pessoa);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping(value = "/{id}/ativo")
+    public ResponseEntity<Void> atualizarPropiedadeAtivo(@PathVariable Long id, @RequestBody Boolean ativo) {
+        this.pessoaService.atualizarPropiedadeAtivo(id, ativo);
+        return ResponseEntity.noContent().build();
+    }
 }

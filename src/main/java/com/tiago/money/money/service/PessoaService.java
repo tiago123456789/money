@@ -30,26 +30,29 @@ public class PessoaService {
     }
 
     public void deletar(Long id) {
-        if (this.verificaSeNaoExistePessoa(id)) {
-            throw new NaoEncontradoException("Pessoa não existe.");
-        }
-
-        this.pessoaRepository.deleteById(id);
+        Pessoa pessoaRetornada = this.buscarPorId(id);
+        this.pessoaRepository.delete(pessoaRetornada);
     }
 
     public void atualizar(Long id, Pessoa pessoa) {
-        Optional<Pessoa> optionalPessoaRetornada = this.pessoaRepository.findById(id);
-        if (!optionalPessoaRetornada.isPresent()) {
-            throw new NaoEncontradoException("Pessoa não existe.");
-        }
-
-        Pessoa pessoaRetornada = optionalPessoaRetornada.get();
+        Pessoa pessoaRetornada = this.buscarPorId(id);
         BeanUtils.copyProperties(pessoa, pessoaRetornada, "id");
         this.pessoaRepository.save(pessoaRetornada);
     }
 
-    private boolean verificaSeNaoExistePessoa(Long id) {
-        return !this.pessoaRepository.findById(id).isPresent();
+    public void atualizarPropiedadeAtivo(Long id, Boolean ativo) {
+        Pessoa pessoaRetornada = this.buscarPorId(id);
+        pessoaRetornada.setAtivo(ativo);
+        this.pessoaRepository.save(pessoaRetornada);
+    }
+
+    public Pessoa buscarPorId(Long id) {
+        Optional<Pessoa> optionalPessoaRetornada = this.pessoaRepository.findById(id);
+        if (!optionalPessoaRetornada.isPresent()) {
+            throw new NaoEncontradoException("Recurso não existe.");
+        }
+
+        return optionalPessoaRetornada.get();
     }
 
     private boolean verificarSeNomeEstaEmUso(String nome) {
