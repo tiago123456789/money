@@ -1,5 +1,7 @@
 package com.tiago.money.money.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -8,6 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "pessoa")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Pessoa {
 
     @Id

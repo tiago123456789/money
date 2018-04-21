@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "pessoas")
@@ -22,6 +23,11 @@ public class PessoaResource {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    @GetMapping
+    public ResponseEntity<List<Pessoa>> buscarTodas() {
+        return ResponseEntity.ok().body(this.pessoaService.buscarTodas());
+    }
+
     @PostMapping
     public ResponseEntity<?> salvar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
         Pessoa pessoaSalva = this.pessoaService.salvar(pessoa);
@@ -32,6 +38,12 @@ public class PessoaResource {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deletar(@PathVariable Long id) {
         this.pessoaService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable Long id,  @Valid @RequestBody Pessoa pessoa) {
+        this.pessoaService.atualizar(id, pessoa);
         return ResponseEntity.noContent().build();
     }
 }
