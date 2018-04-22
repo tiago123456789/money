@@ -1,6 +1,10 @@
 package com.tiago.money.money.model;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -12,24 +16,34 @@ public class Lancamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty
     private String descricao;
+
+    @NotNull
+    @NumberFormat(pattern = "#,##0.00")
     private BigDecimal valor;
+
     private String observacao;
 
+    @NotNull
     @Column(name = "data_vencimento")
     private LocalDate dataVencimento;
 
     @Column(name = "data_pagamento")
     private LocalDate dataPagamento;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(optional = false)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(optional = false)
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_lancamento")
     private TipoLancamento tipoLancamento;
@@ -97,6 +111,14 @@ public class Lancamento {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
+    }
+
+    public TipoLancamento getTipoLancamento() {
+        return tipoLancamento;
+    }
+
+    public void setTipoLancamento(TipoLancamento tipoLancamento) {
+        this.tipoLancamento = tipoLancamento;
     }
 
     @Override

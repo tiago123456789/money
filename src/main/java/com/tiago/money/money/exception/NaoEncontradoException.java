@@ -6,4 +6,8 @@ public class NaoEncontradoException extends RuntimeException {
         super(message);
     }
 
+    public NaoEncontradoException(Throwable cause) {
+        super(cause);
+    }
+
 }

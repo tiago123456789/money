@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class LancamentoResource {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Lancamento lancamento, HttpServletResponse response) {
+    public void save(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo  = this.lancamentoService.save(lancamento);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getId()));
     }

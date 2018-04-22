@@ -49,7 +49,7 @@ public class PessoaService {
     public Pessoa buscarPorId(Long id) {
         Optional<Pessoa> optionalPessoaRetornada = this.pessoaRepository.findById(id);
         if (!optionalPessoaRetornada.isPresent()) {
-            throw new NaoEncontradoException("Recurso não existe.");
+            throw new NaoEncontradoException("Pessoa não existe.");
         }
 
         return optionalPessoaRetornada.get();

@@ -15,6 +15,12 @@ public class LancamentoService {
     @Autowired
     private LancamentoRepository lancamentoRepository;
 
+    @Autowired
+    private PessoaService pessoaService;
+
+    @Autowired
+    private CategoriaService categoriaService;
+
 
     public List<Lancamento> findAll() {
         return this.lancamentoRepository.findAll();
@@ -31,6 +37,12 @@ public class LancamentoService {
     }
 
     public Lancamento save(Lancamento lancamento) {
-        return this.lancamentoRepository.save(lancamento);
+        try {
+            this.categoriaService.findOne(lancamento.getCategoria().getId());
+            this.pessoaService.buscarPorId(lancamento.getPessoa().getId());
+            return this.lancamentoRepository.save(lancamento);
+        } catch (NaoEncontradoException e) {
+            throw new NaoEncontradoException(e);
+        }
     }
 }
