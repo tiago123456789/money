@@ -49,6 +49,14 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+
+		<!-- HIBERNATE WORKING JAVA 8 -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-java8</artifactId>
+			<version>5.2.11.Final</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
