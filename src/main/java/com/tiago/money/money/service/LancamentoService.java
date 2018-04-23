@@ -1,7 +1,9 @@
 package com.tiago.money.money.service;
 
 import com.tiago.money.money.exception.NaoEncontradoException;
+import com.tiago.money.money.exception.PessoaInativaException;
 import com.tiago.money.money.model.Lancamento;
+import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,12 @@ public class LancamentoService {
     public Lancamento save(Lancamento lancamento) {
         try {
             this.categoriaService.findOne(lancamento.getCategoria().getId());
-            this.pessoaService.buscarPorId(lancamento.getPessoa().getId());
+            Pessoa pessoa = this.pessoaService.buscarPorId(lancamento.getPessoa().getId());
+
+            if (!pessoa.getAtivo()) {
+                throw new PessoaInativaException("Pessoa está inativa, por isso não pode ser associada a um lançamento!");
+            }
+
             return this.lancamentoRepository.save(lancamento);
         } catch (NaoEncontradoException e) {
             throw new NaoEncontradoException(e);
