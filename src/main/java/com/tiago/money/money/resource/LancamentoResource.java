@@ -2,6 +2,7 @@ package com.tiago.money.money.resource;
 
 import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Lancamento;
+import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,8 +25,8 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public ResponseEntity<List<Lancamento>> findALl() {
-        return ResponseEntity.ok().body(this.lancamentoService.findAll());
+    public ResponseEntity<List<Lancamento>> findALl(LancamentoFilter filter) {
+        return ResponseEntity.ok().body(this.lancamentoService.findAll(filter));
     }
 
     @GetMapping(value = "/{id}")
@@ -38,5 +39,11 @@ public class LancamentoResource {
     public void save(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo  = this.lancamentoService.save(lancamento);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getId()));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        this.lancamentoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

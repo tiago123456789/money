@@ -1,5 +1,6 @@
 package com.tiago.money.money.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "lancamentos")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Lancamento {
 
     @Id

@@ -5,7 +5,9 @@ import com.tiago.money.money.exception.PessoaInativaException;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
+import com.tiago.money.money.repository.filter.LancamentoFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,8 @@ public class LancamentoService {
     private CategoriaService categoriaService;
 
 
-    public List<Lancamento> findAll() {
-        return this.lancamentoRepository.findAll();
+    public List<Lancamento> findAll(LancamentoFilter lancamentoFilter) {
+        return this.lancamentoRepository.filtrar(lancamentoFilter);
     }
 
     public Lancamento findById(Long id) {
@@ -51,5 +53,10 @@ public class LancamentoService {
         } catch (NaoEncontradoException e) {
             throw new NaoEncontradoException(e);
         }
+    }
+
+    public void delete(Long id) {
+        Lancamento lancamento = this.findById(id);
+        this.lancamentoRepository.delete(lancamento);
     }
 }
