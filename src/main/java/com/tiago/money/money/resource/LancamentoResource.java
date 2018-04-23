@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -25,8 +26,8 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public ResponseEntity<List<Lancamento>> findALl(LancamentoFilter filter) {
-        return ResponseEntity.ok().body(this.lancamentoService.findAll(filter));
+    public ResponseEntity<List<Lancamento>> findALl(LancamentoFilter filter, Pageable pageable) {
+        return ResponseEntity.ok().body(this.lancamentoService.findAll(filter, pageable));
     }
 
     @GetMapping(value = "/{id}")

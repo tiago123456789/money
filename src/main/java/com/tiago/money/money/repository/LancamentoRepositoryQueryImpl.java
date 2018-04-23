@@ -2,6 +2,8 @@ package com.tiago.money.money.repository;
 
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -19,8 +21,7 @@ public class LancamentoRepositoryQueryImpl implements LancamentoRepositoryQuery 
     @PersistenceContext
     private EntityManager manager;
 
-    @Override
-    public List<Lancamento> filtrar(LancamentoFilter lancamentoFilter) {
+    public Page<Lancamento> filtrar(LancamentoFilter lancamentoFilter, org.springframework.data.domain.Pageable pageable) {
         CriteriaBuilder criteriaBuilder = this.manager.getCriteriaBuilder();
         CriteriaQuery<Lancamento> query = criteriaBuilder.createQuery(Lancamento.class);
         Root<Lancamento> root = query.from(Lancamento.class);
@@ -28,7 +29,29 @@ public class LancamentoRepositoryQueryImpl implements LancamentoRepositoryQuery 
                 .where(this.getRestricoesConsulta(criteriaBuilder, root, lancamentoFilter)
                 .toArray(new Predicate[]{}));
 
-        return this.manager.createQuery(query).getResultList();
+        TypedQuery<Lancamento> lancamentoTypedQuery = this.manager.createQuery(query);
+        this.definirPaginacaoNaConsulta(lancamentoTypedQuery, pageable);
+        return new PageImpl<>(lancamentoTypedQuery.getResultList(), pageable, this.getQuantidadeLancamentos(lancamentoFilter));
+    }
+
+
+    private Long getQuantidadeLancamentos(LancamentoFilter filter) {
+        CriteriaBuilder criteriaBuilder = this.manager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<Lancamento> root = query.from(Lancamento.class);
+
+        query.where(this.getRestricoesConsulta(criteriaBuilder, root, filter).toArray(new Predicate[]{}));
+        query.select(criteriaBuilder.count(root));
+        return this.manager.createQuery(query).getSingleResult();
+    }
+
+    private void definirPaginacaoNaConsulta(TypedQuery<Lancamento> query, org.springframework.data.domain.Pageable pageable) {
+        int paginaAtual = pageable.getPageNumber();
+        int totalRegistrosPorPagina = pageable.getPageSize();
+        int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
+
+        query.setFirstResult(primeiroRegistroDaPagina);
+        query.setMaxResults(totalRegistrosPorPagina);
     }
 
     private List<Predicate> getRestricoesConsulta(

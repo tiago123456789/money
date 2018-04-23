@@ -26,8 +26,8 @@ public class LancamentoService {
     private CategoriaService categoriaService;
 
 
-    public List<Lancamento> findAll(LancamentoFilter lancamentoFilter) {
-        return this.lancamentoRepository.filtrar(lancamentoFilter);
+    public List<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
     public Lancamento findById(Long id) {
