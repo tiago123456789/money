@@ -6,13 +6,13 @@ import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -26,7 +26,7 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public ResponseEntity<List<Lancamento>> findALl(LancamentoFilter filter, Pageable pageable) {
+    public ResponseEntity<Page<Lancamento>> findALl(LancamentoFilter filter, org.springframework.data.domain.Pageable pageable) {
         return ResponseEntity.ok().body(this.lancamentoService.findAll(filter, pageable));
     }
 

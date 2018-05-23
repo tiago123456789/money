@@ -7,6 +7,7 @@ import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class LancamentoService {
     private CategoriaService categoriaService;
 
 
-    public List<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {
+    public Page<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
