@@ -2,7 +2,7 @@ package com.tiago.money.money.resource;
 
 import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Lancamento;
-import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.repository.lancamento.filter.LancamentoFilter;
 import com.tiago.money.money.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/lancamentos")

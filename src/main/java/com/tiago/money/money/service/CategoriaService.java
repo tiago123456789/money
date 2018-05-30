@@ -20,13 +20,13 @@ public class CategoriaService {
     }
 
     public Categoria findOne(Long id) throws NaoEncontradoException {
-        Optional<Categoria> optionalCategoria = this.categoriaRepository.findById(id);
+        Categoria categoria = this.categoriaRepository.findOne(id);
 
-        if (! optionalCategoria.isPresent()) {
+        if (categoria == null) {
             throw new NaoEncontradoException("Categoria não encontrada!");
         }
 
-        return optionalCategoria.get();
+        return categoria;
     }
 
     public Categoria save(Categoria newCategoria) {

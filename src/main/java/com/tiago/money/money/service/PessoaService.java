@@ -47,12 +47,12 @@ public class PessoaService {
     }
 
     public Pessoa buscarPorId(Long id) {
-        Optional<Pessoa> optionalPessoaRetornada = this.pessoaRepository.findById(id);
-        if (!optionalPessoaRetornada.isPresent()) {
+        Pessoa pessoaRetornada = this.pessoaRepository.findOne(id);
+        if (pessoaRetornada == null) {
             throw new NaoEncontradoException("Pessoa não existe.");
         }
 
-        return optionalPessoaRetornada.get();
+        return pessoaRetornada;
     }
 
     private boolean verificarSeNomeEstaEmUso(String nome) {

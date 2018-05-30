@@ -5,14 +5,11 @@ import com.tiago.money.money.exception.PessoaInativaException;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
-import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.repository.lancamento.filter.LancamentoFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LancamentoService {
@@ -32,13 +29,13 @@ public class LancamentoService {
     }
 
     public Lancamento findById(Long id) {
-        Optional<Lancamento> optionLancamento = this.lancamentoRepository.findById(id);
+        Lancamento lancamento = this.lancamentoRepository.findOne(id);
 
-        if (!optionLancamento.isPresent()) {
+        if (lancamento == null) {
             throw new NaoEncontradoException("Registro não encontrado");
         }
 
-        return optionLancamento.get();
+        return lancamento;
     }
 
     public Lancamento save(Lancamento lancamento) {

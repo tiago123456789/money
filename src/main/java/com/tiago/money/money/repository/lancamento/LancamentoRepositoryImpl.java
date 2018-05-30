@@ -1,7 +1,7 @@
-package com.tiago.money.money.repository;
+package com.tiago.money.money.repository.lancamento;
 
 import com.tiago.money.money.model.Lancamento;
-import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.repository.lancamento.filter.LancamentoFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
@@ -16,10 +16,12 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LancamentoRepositoryQueryImpl implements LancamentoRepositoryQuery {
+public class LancamentoRepositoryImpl {
 
     @PersistenceContext
     private EntityManager manager;
+
+    public LancamentoRepositoryImpl() {}
 
     public Page<Lancamento> filtrar(LancamentoFilter lancamentoFilter, org.springframework.data.domain.Pageable pageable) {
         CriteriaBuilder criteriaBuilder = this.manager.getCriteriaBuilder();
