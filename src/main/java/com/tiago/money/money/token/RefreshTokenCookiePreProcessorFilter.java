@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class RefreshTokenPreProcessorFilter implements Filter {
+public class RefreshTokenCookiePreProcessorFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
@@ -22,7 +22,7 @@ public class RefreshTokenPreProcessorFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        if ("/oath/token".equalsIgnoreCase(request.getRequestURI())
+            if ("/oauth/token".equalsIgnoreCase(request.getRequestURI())
                 && request.getCookies() != null
                 && "refresh_token".equals(request.getParameter("grant_type"))) {
             String refreshToken = getRefreshTokenInCookiesRequest(request);
