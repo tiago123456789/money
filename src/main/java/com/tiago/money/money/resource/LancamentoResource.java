@@ -27,27 +27,27 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth.hasScope('read')")
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<Page<Lancamento>> findAll(LancamentoFilter filter, org.springframework.data.domain.Pageable pageable) {
         return ResponseEntity.ok().body(this.lancamentoService.findAll(filter, pageable));
     }
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth.hasScope('read')")
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<Lancamento> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(this.lancamentoService.findById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') AND #oauth.hasScope('write')")
+    @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') AND #oauth2.hasScope('write')")
     public void save(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo  = this.lancamentoService.save(lancamento);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getId()));
     }
 
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize(value = "hasAuthority('ROLE_REMOVER_LANCAMENTO') AND #oauth.hasScope('write')")
+    @PreAuthorize(value = "hasAuthority('ROLE_REMOVER_LANCAMENTO') AND #oauth2.hasScope('write')")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         this.lancamentoService.delete(id);
         return ResponseEntity.noContent().build();
