@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,11 +25,13 @@ public class CategoriaResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_CATEGORIA') AND #oauth2.hasScope('read') ")
     public List<Categoria> searchAll() {
         return this.categoriaService.searchAll();
     }
 
     @PostMapping
+    @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_CATEGORIA') AND #oauth2.hasScope('write')")
     public ResponseEntity<?> save(@Valid @RequestBody Categoria newCategoria, HttpServletResponse response) {
         Categoria categoriaSalva = this.categoriaService.save(newCategoria);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getId()));
@@ -36,6 +39,7 @@ public class CategoriaResource {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_CATEGORIA') AND #oauth2.hasScope('read')")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
         try {
             return ResponseEntity.ok().body(this.categoriaService.findOne(id));

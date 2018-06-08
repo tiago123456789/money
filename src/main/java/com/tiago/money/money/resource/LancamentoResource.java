@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,23 +27,27 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public ResponseEntity<Page<Lancamento>> findALl(LancamentoFilter filter, org.springframework.data.domain.Pageable pageable) {
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth.hasScope('read')")
+    public ResponseEntity<Page<Lancamento>> findAll(LancamentoFilter filter, org.springframework.data.domain.Pageable pageable) {
         return ResponseEntity.ok().body(this.lancamentoService.findAll(filter, pageable));
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth.hasScope('read')")
     public ResponseEntity<Lancamento> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(this.lancamentoService.findById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') AND #oauth.hasScope('write')")
     public void save(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo  = this.lancamentoService.save(lancamento);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getId()));
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize(value = "hasAuthority('ROLE_REMOVER_LANCAMENTO') AND #oauth.hasScope('write')")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         this.lancamentoService.delete(id);
         return ResponseEntity.noContent().build();
