@@ -1,5 +1,7 @@
 package com.tiago.money.money.cors;
 
+import com.tiago.money.money.config.profile.MoneyProfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -13,7 +15,8 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-    private String originPermited = "http://localhost:8080";
+    @Autowired
+    private MoneyProfile moneyProfile;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
@@ -27,7 +30,7 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        response.setHeader("Access-Control-Allow-Origin", this.originPermited);
+        response.setHeader("Access-Control-Allow-Origin", this.moneyProfile.getOriginPermission());
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         if (this.isMethodOptionAndOriginPermited(request)) {
@@ -46,6 +49,6 @@ public class CorsFilter implements Filter {
 
     private boolean isMethodOptionAndOriginPermited(HttpServletRequest request) {
         return "OPTIONS".equals(request.getMethod())
-                && originPermited.equals(request.getHeader("Origin"));
+                && this.moneyProfile.getOriginPermission().equals(request.getHeader("Origin"));
     }
 }
