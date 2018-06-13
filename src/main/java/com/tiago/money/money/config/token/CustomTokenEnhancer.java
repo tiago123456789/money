@@ -1,6 +1,5 @@
 package com.tiago.money.money.config.token;
 
-import com.tiago.money.money.model.Usuario;
 import com.tiago.money.money.security.UsuarioSistema;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
