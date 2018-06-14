@@ -1,8 +1,7 @@
 package com.tiago.money.money.repository;
 
 import com.tiago.money.money.model.Lancamento;
-import com.tiago.money.money.repository.lancamento.LancamentoRepositoryQuery;
-import com.tiago.money.money.repository.lancamento.filter.LancamentoFilter;
+import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

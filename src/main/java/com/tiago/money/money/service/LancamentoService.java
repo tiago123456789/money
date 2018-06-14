@@ -5,7 +5,7 @@ import com.tiago.money.money.exception.PessoaInativaException;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
-import com.tiago.money.money.repository.lancamento.filter.LancamentoFilter;
+import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

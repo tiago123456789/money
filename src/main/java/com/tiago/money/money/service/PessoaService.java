@@ -4,12 +4,12 @@ import com.tiago.money.money.exception.NaoEncontradoException;
 import com.tiago.money.money.exception.NegocioException;
 import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.PessoaRepository;
+import com.tiago.money.money.repository.filter.PessoaFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PessoaService {
@@ -17,8 +17,8 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public List<Pessoa> buscarTodas() {
-        return this.pessoaRepository.findAll();
+    public Page<Pessoa> buscarTodas(PessoaFilter filter, Pageable pagination) {
+        return this.pessoaRepository.filtrar(filter, pagination);
     }
 
     public Pessoa salvar(Pessoa pessoa) {

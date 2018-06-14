@@ -1,4 +1,4 @@
-package com.tiago.money.money.repository.lancamento.filter;
+package com.tiago.money.money.repository.filter;
 
 import com.tiago.money.money.config.MoneyConstantes;
 import org.springframework.format.annotation.DateTimeFormat;

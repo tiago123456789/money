@@ -1,8 +1,7 @@
-package com.tiago.money.money.repository.lancamento;
+package com.tiago.money.money.repository.impl;
 
 import com.tiago.money.money.model.Lancamento;
-import com.tiago.money.money.model.TipoLancamento;
-import com.tiago.money.money.repository.lancamento.filter.LancamentoFilter;
+import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,8 +15,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

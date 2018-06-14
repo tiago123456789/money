@@ -2,9 +2,12 @@ package com.tiago.money.money.resource;
 
 import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Pessoa;
+import com.tiago.money.money.repository.filter.PessoaFilter;
 import com.tiago.money.money.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,8 +29,8 @@ public class PessoaResource {
 
     @GetMapping
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_PESSOA') AND #oauth2.hasScope('read')")
-    public ResponseEntity<List<Pessoa>> buscarTodas() {
-        return ResponseEntity.ok().body(this.pessoaService.buscarTodas());
+    public ResponseEntity<Page<Pessoa>> buscarTodas(PessoaFilter filter, Pageable pagination) {
+        return ResponseEntity.ok().body(this.pessoaService.buscarTodas(filter, pagination));
     }
 
     @PostMapping
