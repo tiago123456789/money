@@ -7,6 +7,7 @@ import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.ResumoLancamentoTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,5 +63,11 @@ public class LancamentoService {
     public void delete(Long id) {
         Lancamento lancamento = this.findById(id);
         this.lancamentoRepository.delete(lancamento);
+    }
+
+    public void atualizar(Long id, Lancamento lancamento) {
+        Lancamento lancamentoRetornado = this.findById(id);
+        BeanUtils.copyProperties(lancamento, lancamentoRetornado, "id");
+        this.lancamentoRepository.saveAndFlush(lancamentoRetornado);
     }
 }

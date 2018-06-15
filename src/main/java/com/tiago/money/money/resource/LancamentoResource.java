@@ -60,4 +60,11 @@ public class LancamentoResource {
         this.lancamentoService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping(value = "/{id}")
+    @PreAuthorize(value = "hasAuthority('ROLE_ATUALIZAR_LANCAMENTO') AND #oauth2.hasScope('write')")
+    public ResponseEntity<Void> atualizar(@PathVariable Long id, @RequestBody Lancamento lancamento) {
+        this.lancamentoService.atualizar(id, lancamento);
+        return ResponseEntity.noContent().build();
+    }
 }
