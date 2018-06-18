@@ -1,9 +1,12 @@
 package com.tiago.money.money.repository.impl;
 
 import com.tiago.money.money.model.Lancamento;
+import com.tiago.money.money.model.TipoLancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
+import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.ResumoLancamentoTO;
+import com.tiago.money.money.util.DataUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,31 @@ public class LancamentoRepositoryImpl {
 
     public LancamentoRepositoryImpl() {}
 
+
+    public List<LancamentoEstatisticaPorDia> buscarEstatisticaPorDia(LocalDate mesReferente) {
+        CriteriaBuilder builder = this.manager.getCriteriaBuilder();
+        CriteriaQuery<LancamentoEstatisticaPorDia> query = builder.createQuery(LancamentoEstatisticaPorDia.class);
+        Root<Lancamento> rootLancamento = query.from(Lancamento.class);
+
+        query.select(
+                builder.construct(LancamentoEstatisticaPorDia.class,
+                        rootLancamento.get("tipoLancamento"), rootLancamento.get("dataVencimento"),
+                        builder.sum(rootLancamento.get("valor"))
+                )
+        );
+
+        LocalDate dataComPrimeiroDiaMes = DataUtil.getDataComPrimeiroDiaMes(mesReferente);
+        LocalDate dataComUltimoDiaMes = DataUtil.getDataComUltimoDiaMes(mesReferente);
+
+        query.where(
+                builder.greaterThanOrEqualTo(rootLancamento.get("dataVencimento"), dataComPrimeiroDiaMes),
+                builder.lessThanOrEqualTo(rootLancamento.get("dataVencimento"), dataComUltimoDiaMes)
+        );
+
+        query.groupBy(rootLancamento.get("tipoLancamento"), rootLancamento.get("dataVencimento"));
+        return this.manager.createQuery(query).getResultList();
+    }
+
     public List<LancamentoEstatisticaPorCategoria> buscarEstatisticaPorCategoria(LocalDate mesReferente) {
         CriteriaBuilder builder = this.manager.getCriteriaBuilder();
         CriteriaQuery<LancamentoEstatisticaPorCategoria> query = builder.createQuery(LancamentoEstatisticaPorCategoria.class);
@@ -37,8 +66,8 @@ public class LancamentoRepositoryImpl {
                 builder.sum(rootLancamento.get("valor")))
         );
 
-        LocalDate dataComPrimeiroDiaMes = mesReferente.withDayOfMonth(1);
-        LocalDate dataComUltimoDiaMes = mesReferente.withDayOfMonth(mesReferente.lengthOfMonth());
+        LocalDate dataComPrimeiroDiaMes = DataUtil.getDataComPrimeiroDiaMes(mesReferente);
+        LocalDate dataComUltimoDiaMes = DataUtil.getDataComUltimoDiaMes(mesReferente);
 
         query.where(
                 builder.greaterThanOrEqualTo(rootLancamento.get("dataVencimento"), dataComPrimeiroDiaMes),

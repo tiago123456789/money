@@ -3,6 +3,7 @@ package com.tiago.money.money.repository;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
+import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,4 +20,5 @@ public interface LancamentoRepository
     Page<ResumoLancamentoTO> buscarResumo(LancamentoFilter lancamentoFilter, Pageable pageable);
 
     List<LancamentoEstatisticaPorCategoria> buscarEstatisticaPorCategoria(LocalDate mesReferente);
+    List<LancamentoEstatisticaPorDia> buscarEstatisticaPorDia(LocalDate mesReferente);
 }

@@ -7,6 +7,7 @@ import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
+import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,4 +79,7 @@ public class LancamentoService {
         return this.lancamentoRepository.buscarEstatisticaPorCategoria(mesReferente);
     }
 
+    public List<LancamentoEstatisticaPorDia> buscarEstatisticaPorDia(LocalDate mesReferente) {
+        return this.lancamentoRepository.buscarEstatisticaPorDia(mesReferente);
+    }
 }

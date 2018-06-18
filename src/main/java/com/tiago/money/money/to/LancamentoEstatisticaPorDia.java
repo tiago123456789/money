@@ -5,13 +5,21 @@ import com.tiago.money.money.model.TipoLancamento;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class LancamentoPorEstatisticaDia {
+public class LancamentoEstatisticaPorDia {
 
     private TipoLancamento tipoLancamento;
 
     private LocalDate dia;
 
     private BigDecimal total;
+
+    public LancamentoEstatisticaPorDia() {}
+
+    public LancamentoEstatisticaPorDia(TipoLancamento tipoLancamento, LocalDate dia, BigDecimal total) {
+        this.tipoLancamento = tipoLancamento;
+        this.dia = dia;
+        this.total = total;
+    }
 
     public TipoLancamento getTipoLancamento() {
         return tipoLancamento;

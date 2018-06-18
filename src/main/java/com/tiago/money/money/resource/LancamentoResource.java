@@ -5,6 +5,7 @@ import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.service.LancamentoService;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
+import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,6 +35,12 @@ public class LancamentoResource {
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<List<LancamentoEstatisticaPorCategoria>> buscarEstatisticaPorCategoria() {
         return ResponseEntity.ok(this.lancamentoService.buscarEstatisticaPorCategoria(LocalDate.now()));
+    }
+
+    @GetMapping(value = "/estatisticas/por-dia")
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #aouth2.has.Scope('read')")
+    public ResponseEntity<List<LancamentoEstatisticaPorDia>> buscarEstatisticaPorDia() {
+        return ResponseEntity.ok(this.lancamentoService.buscarEstatisticaPorDia(LocalDate.now()));
     }
 
     @GetMapping
