@@ -2,6 +2,7 @@ package com.tiago.money.money.repository.impl;
 
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,29 @@ public class LancamentoRepositoryImpl {
     private EntityManager manager;
 
     public LancamentoRepositoryImpl() {}
+
+    public List<LancamentoEstatisticaPorCategoria> buscarEstatisticaPorCategoria(LocalDate mesReferente) {
+        CriteriaBuilder builder = this.manager.getCriteriaBuilder();
+        CriteriaQuery<LancamentoEstatisticaPorCategoria> query = builder.createQuery(LancamentoEstatisticaPorCategoria.class);
+        Root<Lancamento> rootLancamento = query.from(Lancamento.class);
+
+        query.select(builder.construct(
+                LancamentoEstatisticaPorCategoria.class, rootLancamento.get("categoria"),
+                builder.sum(rootLancamento.get("valor")))
+        );
+
+        LocalDate dataComPrimeiroDiaMes = mesReferente.withDayOfMonth(1);
+        LocalDate dataComUltimoDiaMes = mesReferente.withDayOfMonth(mesReferente.lengthOfMonth());
+
+        query.where(
+                builder.greaterThanOrEqualTo(rootLancamento.get("dataVencimento"), dataComPrimeiroDiaMes),
+                builder.lessThanOrEqualTo(rootLancamento.get("dataVencimento"), dataComUltimoDiaMes)
+        );
+
+        query.groupBy(rootLancamento.get("categoria"));
+
+        return this.manager.createQuery(query).getResultList();
+    }
 
     public Page<ResumoLancamentoTO> buscarResumo(LancamentoFilter lancamentoFilter, Pageable pageable) {
         CriteriaBuilder builder = this.manager.getCriteriaBuilder();

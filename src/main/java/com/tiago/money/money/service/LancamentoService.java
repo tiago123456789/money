@@ -6,12 +6,16 @@ import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class LancamentoService {
@@ -24,7 +28,6 @@ public class LancamentoService {
 
     @Autowired
     private CategoriaService categoriaService;
-
 
     public Page<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
@@ -70,4 +73,9 @@ public class LancamentoService {
         BeanUtils.copyProperties(lancamento, lancamentoRetornado, "id");
         this.lancamentoRepository.saveAndFlush(lancamentoRetornado);
     }
+
+    public List<LancamentoEstatisticaPorCategoria> buscarEstatisticaPorCategoria(LocalDate mesReferente) {
+        return this.lancamentoRepository.buscarEstatisticaPorCategoria(mesReferente);
+    }
+
 }

@@ -4,6 +4,7 @@ import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.service.LancamentoService;
+import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/lancamentos")
@@ -26,6 +29,12 @@ public class LancamentoResource {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @GetMapping(value = "/estatisticas/por-categoria")
+    @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
+    public ResponseEntity<List<LancamentoEstatisticaPorCategoria>> buscarEstatisticaPorCategoria() {
+        return ResponseEntity.ok(this.lancamentoService.buscarEstatisticaPorCategoria(LocalDate.now()));
+    }
 
     @GetMapping
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
