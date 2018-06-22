@@ -5,6 +5,7 @@ import com.tiago.money.money.model.TipoLancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
+import com.tiago.money.money.to.LancamentoEstatisticaPorPessoa;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import com.tiago.money.money.util.DataUtil;
 import org.springframework.data.domain.Page;
@@ -29,9 +30,30 @@ public class LancamentoRepositoryImpl {
     @PersistenceContext
     private EntityManager manager;
 
-    public LancamentoRepositoryImpl() {}
+    public LancamentoRepositoryImpl() {
+    }
 
+    public List<LancamentoEstatisticaPorPessoa> buscaEstatisticaPorPessoa(LocalDate dataInicial, LocalDate dataFim) {
+        CriteriaBuilder builder = this.manager.getCriteriaBuilder();
+        CriteriaQuery<LancamentoEstatisticaPorPessoa> query = builder
+                                                                .createQuery(LancamentoEstatisticaPorPessoa.class);
+        Root<Lancamento> rootLancamento = query.from(Lancamento.class);
 
+        query.select(
+                builder.construct(LancamentoEstatisticaPorPessoa.class,
+                        rootLancamento.get("tipoLancamento"),
+                        rootLancamento.get("pessoa"),
+                        builder.sum(rootLancamento.get("valor")))
+        );
+
+        query.where(
+                builder.greaterThanOrEqualTo(rootLancamento.get("dataVencimento"), dataInicial),
+                builder.lessThanOrEqualTo(rootLancamento.get("dataVencimento"), dataFim)
+        );
+
+        query.groupBy(rootLancamento.get("tipoLancamento"), rootLancamento.get("pessoa"));
+        return this.manager.createQuery(query).getResultList();
+    }
     public List<LancamentoEstatisticaPorDia> buscarEstatisticaPorDia(LocalDate mesReferente) {
         CriteriaBuilder builder = this.manager.getCriteriaBuilder();
         CriteriaQuery<LancamentoEstatisticaPorDia> query = builder.createQuery(LancamentoEstatisticaPorDia.class);
@@ -39,7 +61,7 @@ public class LancamentoRepositoryImpl {
 
         query.select(
                 builder.construct(LancamentoEstatisticaPorDia.class,
-                        rootLancamento.get("tipoLancamento"), rootLancamento.get("dataVencimento"),
+                        rootLancamento.get("tipoLancamento"), rootLancamento.get("pessoa"),
                         builder.sum(rootLancamento.get("valor"))
                 )
         );
@@ -105,7 +127,7 @@ public class LancamentoRepositoryImpl {
         Root<Lancamento> root = query.from(Lancamento.class);
         query
                 .where(this.getRestricoesConsulta(criteriaBuilder, root, lancamentoFilter)
-                .toArray(new Predicate[]{}));
+                        .toArray(new Predicate[]{}));
 
         TypedQuery<Lancamento> lancamentoTypedQuery = this.manager.createQuery(query);
         this.definirPaginacaoNaConsulta(lancamentoTypedQuery, pageable);
