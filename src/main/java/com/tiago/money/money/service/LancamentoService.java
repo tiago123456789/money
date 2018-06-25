@@ -8,15 +8,22 @@ import com.tiago.money.money.repository.LancamentoRepository;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
+import com.tiago.money.money.to.LancamentoEstatisticaPorPessoa;
 import com.tiago.money.money.to.ResumoLancamentoTO;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class LancamentoService {
@@ -81,5 +88,20 @@ public class LancamentoService {
 
     public List<LancamentoEstatisticaPorDia> buscarEstatisticaPorDia(LocalDate mesReferente) {
         return this.lancamentoRepository.buscarEstatisticaPorDia(mesReferente);
+    }
+
+    public byte[] getRelatorioLancamentoEstatisticaPorPessoa(LocalDate dataInicio, LocalDate dataFim) throws JRException {
+        List<LancamentoEstatisticaPorPessoa> dados = this.lancamentoRepository.buscaEstatisticaPorPessoa(dataInicio, dataFim);
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("DT_INICIO", java.sql.Date.valueOf(dataInicio));
+        parametros.put("DT_FIM", java.sql.Date.valueOf(dataFim));
+        parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(this.getStreamRelatorioPessoa(), parametros, new JRBeanCollectionDataSource(dados));
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    private InputStream getStreamRelatorioPessoa() {
+        return this.getClass()
+                   .getResourceAsStream("/reports/lancamento_por_pessoa.jasper");
     }
 }
