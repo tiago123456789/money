@@ -2,7 +2,7 @@ package com.tiago.money.money.resource;
 
 import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Categoria;
-import com.tiago.money.money.service.CategoriaService;
+import com.tiago.money.money.bo.CategoriaBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CategoriaResource {
 
     @Autowired
-    private CategoriaService categoriaService;
+    private CategoriaBO categoriaBO;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -27,13 +27,13 @@ public class CategoriaResource {
     @GetMapping
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_CATEGORIA') AND #oauth2.hasScope('read') ")
     public List<Categoria> searchAll() {
-        return this.categoriaService.searchAll();
+        return this.categoriaBO.searchAll();
     }
 
     @PostMapping
     @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_CATEGORIA') AND #oauth2.hasScope('write')")
     public ResponseEntity<?> save(@Valid @RequestBody Categoria newCategoria, HttpServletResponse response) {
-        Categoria categoriaSalva = this.categoriaService.save(newCategoria);
+        Categoria categoriaSalva = this.categoriaBO.save(newCategoria);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -42,7 +42,7 @@ public class CategoriaResource {
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_CATEGORIA') AND #oauth2.hasScope('read')")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok().body(this.categoriaService.findOne(id));
+            return ResponseEntity.ok().body(this.categoriaBO.findOne(id));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

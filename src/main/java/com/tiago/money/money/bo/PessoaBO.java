@@ -1,4 +1,4 @@
-package com.tiago.money.money.service;
+package com.tiago.money.money.bo;
 
 import com.tiago.money.money.exception.NaoEncontradoException;
 import com.tiago.money.money.exception.NegocioException;
@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PessoaService {
+public class PessoaBO {
 
     @Autowired
     private PessoaRepository pessoaRepository;

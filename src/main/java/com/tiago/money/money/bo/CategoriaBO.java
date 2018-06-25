@@ -1,4 +1,4 @@
-package com.tiago.money.money.service;
+package com.tiago.money.money.bo;
 
 import com.tiago.money.money.exception.NaoEncontradoException;
 import com.tiago.money.money.model.Categoria;
@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class CategoriaService {
+public class CategoriaBO {
 
     @Autowired
     private CategoriaRepository categoriaRepository;

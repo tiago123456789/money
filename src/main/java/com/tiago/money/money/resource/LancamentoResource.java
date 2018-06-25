@@ -3,7 +3,7 @@ package com.tiago.money.money.resource;
 import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
-import com.tiago.money.money.service.LancamentoService;
+import com.tiago.money.money.bo.LancamentoBO;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.ResumoLancamentoTO;
@@ -30,7 +30,7 @@ import java.util.List;
 public class LancamentoResource {
 
     @Autowired
-    private LancamentoService lancamentoService;
+    private LancamentoBO lancamentoBO;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -40,7 +40,7 @@ public class LancamentoResource {
     public ResponseEntity<byte[]> getRelatoriosLancamentoEstatisticaPorPessoa(
             @RequestParam("data-inicio") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInIcio,
             @RequestParam("data-fim") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim) throws JRException {
-        byte[] report = this.lancamentoService.getRelatorioLancamentoEstatisticaPorPessoa(dataInIcio, dataFim);
+        byte[] report = this.lancamentoBO.getRelatorioLancamentoEstatisticaPorPessoa(dataInIcio, dataFim);
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
@@ -50,53 +50,53 @@ public class LancamentoResource {
     @GetMapping(value = "/estatisticas/por-categoria")
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<List<LancamentoEstatisticaPorCategoria>> buscarEstatisticaPorCategoria() {
-        return ResponseEntity.ok(this.lancamentoService.buscarEstatisticaPorCategoria(LocalDate.now()));
+        return ResponseEntity.ok(this.lancamentoBO.buscarEstatisticaPorCategoria(LocalDate.now()));
     }
 
     @GetMapping(value = "/estatisticas/por-dia")
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #aouth2.has.Scope('read')")
     public ResponseEntity<List<LancamentoEstatisticaPorDia>> buscarEstatisticaPorDia() {
-        return ResponseEntity.ok(this.lancamentoService.buscarEstatisticaPorDia(LocalDate.now()));
+        return ResponseEntity.ok(this.lancamentoBO.buscarEstatisticaPorDia(LocalDate.now()));
     }
 
     @GetMapping
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<Page<Lancamento>> findAll(LancamentoFilter filter,
                                                     org.springframework.data.domain.Pageable pageable) {
-        return ResponseEntity.ok().body(this.lancamentoService.findAll(filter, pageable));
+        return ResponseEntity.ok().body(this.lancamentoBO.findAll(filter, pageable));
     }
 
     @GetMapping(params = "resumo")
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<Page<ResumoLancamentoTO>> buscarResumo(LancamentoFilter filter, Pageable pageable) {
-        return ResponseEntity.ok().body(this.lancamentoService.buscarResumo(filter, pageable));
+        return ResponseEntity.ok().body(this.lancamentoBO.buscarResumo(filter, pageable));
     }
 
     @GetMapping(value = "/{id}")
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #oauth2.hasScope('read')")
     public ResponseEntity<Lancamento> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(this.lancamentoService.findById(id));
+        return ResponseEntity.ok().body(this.lancamentoBO.findById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') AND #oauth2.hasScope('write')")
     public void save(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
-        Lancamento lancamentoSalvo  = this.lancamentoService.save(lancamento);
+        Lancamento lancamentoSalvo  = this.lancamentoBO.save(lancamento);
         this.publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getId()));
     }
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize(value = "hasAuthority('ROLE_REMOVER_LANCAMENTO') AND #oauth2.hasScope('write')")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        this.lancamentoService.delete(id);
+        this.lancamentoBO.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
     @PreAuthorize(value = "hasAuthority('ROLE_ATUALIZAR_LANCAMENTO') AND #oauth2.hasScope('write')")
     public ResponseEntity<Void> atualizar(@PathVariable Long id, @RequestBody Lancamento lancamento) {
-        this.lancamentoService.atualizar(id, lancamento);
+        this.lancamentoBO.atualizar(id, lancamento);
         return ResponseEntity.noContent().build();
     }
 }

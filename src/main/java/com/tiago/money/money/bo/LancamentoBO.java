@@ -1,4 +1,4 @@
-package com.tiago.money.money.service;
+package com.tiago.money.money.bo;
 
 import com.tiago.money.money.exception.NaoEncontradoException;
 import com.tiago.money.money.exception.PessoaInativaException;
@@ -26,16 +26,16 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class LancamentoService {
+public class LancamentoBO {
 
     @Autowired
     private LancamentoRepository lancamentoRepository;
 
     @Autowired
-    private PessoaService pessoaService;
+    private PessoaBO pessoaBO;
 
     @Autowired
-    private CategoriaService categoriaService;
+    private CategoriaBO categoriaBO;
 
     public Page<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
@@ -58,8 +58,8 @@ public class LancamentoService {
 
     public Lancamento save(Lancamento lancamento) {
         try {
-            this.categoriaService.findOne(lancamento.getCategoria().getId());
-            Pessoa pessoa = this.pessoaService.buscarPorId(lancamento.getPessoa().getId());
+            this.categoriaBO.findOne(lancamento.getCategoria().getId());
+            Pessoa pessoa = this.pessoaBO.buscarPorId(lancamento.getPessoa().getId());
 
             if (!pessoa.getAtivo()) {
                 throw new PessoaInativaException("Pessoa está inativa, por isso não pode ser associada a um lançamento!");
