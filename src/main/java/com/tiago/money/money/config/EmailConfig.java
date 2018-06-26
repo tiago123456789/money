@@ -29,5 +29,7 @@ public class EmailConfig {
         javaMailSender.setPort(moneyProfile.getEmail().getPort());
         javaMailSender.setUsername(moneyProfile.getEmail().getUsername());
         javaMailSender.setPassword(moneyProfile.getEmail().getPassword());
+
+        return javaMailSender;
     }
 }

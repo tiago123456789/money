@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("money")
 public class MoneyProfile {
 
-    private Seguranca seguranca;
-    private Email email;
+    private Seguranca seguranca = new Seguranca();
+    private Email email = new Email();
     private String originPermission = "*";
 
     public Email getEmail() {
