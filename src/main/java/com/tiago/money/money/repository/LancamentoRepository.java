@@ -17,6 +17,8 @@ import java.util.List;
 public interface LancamentoRepository
         extends JpaRepository<Lancamento, Long> {
 
+    List<Lancamento> findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate dataAtual);
+
     Page<Lancamento> filtrar(LancamentoFilter lancamentoFilter, Pageable pageable);
 
     Page<ResumoLancamentoTO> buscarResumo(LancamentoFilter lancamentoFilter, Pageable pageable);
