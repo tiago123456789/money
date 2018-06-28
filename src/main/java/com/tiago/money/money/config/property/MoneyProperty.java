@@ -1,20 +1,18 @@
-package com.tiago.money.money.config.profile;
+package com.tiago.money.money.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@ConfigurationProperties("money")
-public class MoneyProfile {
+@Configuration
+@ConfigurationProperties(prefix = "money")
+public class MoneyProperty {
 
-    private Seguranca seguranca = new Seguranca();
-    private Email email = new Email();
+    private final Seguranca seguranca = new Seguranca();
+    private final Email email = new Email();
     private String originPermission = "*";
 
     public Email getEmail() {
         return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
     }
 
     public String getOriginPermission() {
@@ -27,10 +25,6 @@ public class MoneyProfile {
 
     public Seguranca getSeguranca() {
         return seguranca;
-    }
-
-    public void setSeguranca(Seguranca seguranca) {
-        this.seguranca = seguranca;
     }
 
     public static class Seguranca {

@@ -1,6 +1,6 @@
 package com.tiago.money.money.resource;
 
-import com.tiago.money.money.config.profile.MoneyProfile;
+import com.tiago.money.money.config.property.MoneyProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,13 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 public class TokenResource {
 
     @Autowired
-    private MoneyProfile moneyProfile;
+    private MoneyProperty moneyProperty;
 
     @DeleteMapping(value = "/revoke")
     public void revokeToken(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(this.moneyProfile.getSeguranca().isEnableHttps());
+        cookie.setSecure(this.moneyProperty.getSeguranca().isEnableHttps());
         cookie.setMaxAge(0);
         cookie.setPath(request.getContextPath() + "/oauth/token");
 

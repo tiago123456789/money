@@ -1,6 +1,6 @@
 package com.tiago.money.money.config;
 
-import com.tiago.money.money.config.profile.MoneyProfile;
+import com.tiago.money.money.config.property.MoneyProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,22 +13,22 @@ import java.util.Properties;
 public class EmailConfig {
 
     @Autowired
-    private MoneyProfile moneyProfile;
+    private MoneyProperty moneyProperty;
 
     @Bean
     public JavaMailSender getJavaMailSender() {
         Properties configuracaoEnvioEmail = new Properties();
-        configuracaoEnvioEmail.put("mail.transport.protocol", "stmp");
+        configuracaoEnvioEmail.put("mail.transport.protocol", "smtp");
         configuracaoEnvioEmail.put("mail.smtp.auth", true);
-        configuracaoEnvioEmail.put("mail.stmp.stattls.enable", true);
-        configuracaoEnvioEmail.put("mail.stmp.connectiontimeout", 100000);
+        configuracaoEnvioEmail.put("mail.smtp.starttls.enable", true);
+        configuracaoEnvioEmail.put("mail.smtp.connectiontimeout", 10000);
 
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setJavaMailProperties(configuracaoEnvioEmail);
-        javaMailSender.setHost(moneyProfile.getEmail().getHost());
-        javaMailSender.setPort(moneyProfile.getEmail().getPort());
-        javaMailSender.setUsername(moneyProfile.getEmail().getUsername());
-        javaMailSender.setPassword(moneyProfile.getEmail().getPassword());
+        javaMailSender.setHost(moneyProperty.getEmail().getHost());
+        javaMailSender.setPort(moneyProperty.getEmail().getPort());
+        javaMailSender.setUsername(moneyProperty.getEmail().getUsername());
+        javaMailSender.setPassword(moneyProperty.getEmail().getPassword());
 
         return javaMailSender;
     }

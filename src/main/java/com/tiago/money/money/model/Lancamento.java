@@ -50,6 +50,9 @@ public class Lancamento {
     @Column(name = "tipo_lancamento")
     private TipoLancamento tipoLancamento;
 
+    public boolean isReceita() {
+        return TipoLancamento.RECEITA.equals(this.tipoLancamento);
+    }
 
     public Long getId() {
         return id;

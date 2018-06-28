@@ -37,6 +37,10 @@ public class LancamentoBO {
     @Autowired
     private CategoriaBO categoriaBO;
 
+    public List<Lancamento> findAll() {
+        return this.lancamentoRepository.findAll();
+    }
+
     public Page<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
