@@ -37,8 +37,9 @@ public class LancamentoBO {
     @Autowired
     private CategoriaBO categoriaBO;
 
-    public List<Lancamento> findAll() {
-        return this.lancamentoRepository.findAll();
+    public List<Lancamento> buscarLancamentoVencidosAteDataAtual() {
+        return this.lancamentoRepository
+                .findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
     }
 
     public Page<Lancamento> findAll(LancamentoFilter lancamentoFilter, Pageable pageable) {

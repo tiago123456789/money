@@ -1,6 +1,7 @@
 package com.tiago.money.money.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.NumberFormat;
 
@@ -50,6 +51,7 @@ public class Lancamento {
     @Column(name = "tipo_lancamento")
     private TipoLancamento tipoLancamento;
 
+    @JsonIgnore
     public boolean isReceita() {
         return TipoLancamento.RECEITA.equals(this.tipoLancamento);
     }

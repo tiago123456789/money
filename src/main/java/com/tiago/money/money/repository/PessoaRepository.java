@@ -15,5 +15,4 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 
     Page<Pessoa> filtrar(PessoaFilter pessoaFilter, Pageable paginacao);
 
-    List<Usuario> findByPermissaoDescricao(String descricao);
 }
