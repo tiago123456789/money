@@ -8,6 +8,8 @@ import com.tiago.money.money.email.bean.MessageHtmlBean;
 import com.tiago.money.money.email.service.EmailService;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.model.Usuario;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,10 @@ import java.util.stream.Collectors;
 public class NotificadorLancamentoVencidoFacade {
 
     private static final String PERMISSAO = "ROLE_PESQUISAR_LANCAMENTO";
-
+    
+    @Autowired
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(NotificadorLancamentoVencidoFacade.class);
+    
     @Autowired
     private LancamentoBO lancamentoBO;
 
@@ -34,8 +39,23 @@ public class NotificadorLancamentoVencidoFacade {
     private EmailService emailService;
 
     public void notificar() {
+    	if (this.logger.isDebugEnabled()) {
+    		this.logger.debug("Iniciando processo de envio de email com lançamentos vencidos.");
+    	}
+    	
         List<Usuario> destinatarios = this.usuarioBO.buscarComBasePermissao(PERMISSAO);
+        
+        if (destinatarios.isEmpty()) {
+        	this.logger.warn("Não possui destinatários");
+        	return;
+        }
+        
         List<Lancamento> lancamentos = this.lancamentoBO.buscarLancamentoVencidosAteDataAtual();
+        
+        if (lancamentos.isEmpty()) {
+        	this.logger.warn("Não possui lançamentos vencidos.");
+        }
+        
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("lancamentos", lancamentos);
 

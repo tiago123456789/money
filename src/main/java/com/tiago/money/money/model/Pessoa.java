@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "pessoa")
@@ -28,6 +32,10 @@ public class Pessoa {
 
     @Embedded
     private Endereco endereco;
+    
+    @Valid
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoa")
+    private List<Contato> contatos;
 
     public Long getId() {
         return id;
@@ -61,7 +69,15 @@ public class Pessoa {
         this.endereco = endereco;
     }
 
-    @Override
+    public List<Contato> getContatos() {
+		return contatos;
+	}
+
+	public void setContatos(List<Contato> contatos) {
+		this.contatos = contatos;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
