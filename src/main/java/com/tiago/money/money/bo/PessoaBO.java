@@ -25,6 +25,8 @@ public class PessoaBO {
         if (this.verificarSeNomeEstaEmUso(pessoa.getNome())) {
             throw new NegocioException("Nome já está sendo usado.");
         }
+        
+    	pessoa.getContatos().forEach(contact -> contact.setPessoa(pessoa));
 
         return this.pessoaRepository.save(pessoa);
     }

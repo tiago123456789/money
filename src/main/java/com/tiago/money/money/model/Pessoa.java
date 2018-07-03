@@ -1,5 +1,6 @@
 package com.tiago.money.money.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -33,6 +34,7 @@ public class Pessoa {
     @Embedded
     private Endereco endereco;
     
+    @JsonIgnoreProperties("pessoa")
     @Valid
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoa")
     private List<Contato> contatos;
@@ -69,6 +71,7 @@ public class Pessoa {
         this.endereco = endereco;
     }
 
+    
     public List<Contato> getContatos() {
 		return contatos;
 	}
