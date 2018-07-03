@@ -38,7 +38,10 @@ public class PessoaBO {
 
     public void atualizar(Long id, Pessoa pessoa) {
         Pessoa pessoaRetornada = this.buscarPorId(id);
-        BeanUtils.copyProperties(pessoa, pessoaRetornada, "id");
+        pessoaRetornada.getContatos().clear();
+        pessoaRetornada.getContatos().addAll(pessoa.getContatos());
+        pessoaRetornada.getContatos().forEach(contact -> contact.setPessoa(pessoaRetornada));
+        BeanUtils.copyProperties(pessoa, pessoaRetornada, "id", "contatos");
         this.pessoaRepository.save(pessoaRetornada);
     }
 
