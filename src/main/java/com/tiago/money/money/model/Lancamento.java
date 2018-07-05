@@ -1,5 +1,6 @@
 package com.tiago.money.money.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -40,7 +41,8 @@ public class Lancamento {
     @ManyToOne(optional = false)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
-
+    
+    @JsonIgnoreProperties(value = "contatos")
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "pessoa_id")

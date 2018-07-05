@@ -3,11 +3,13 @@ package com.tiago.money.money.resource;
 import com.tiago.money.money.event.RecursoCriadoEvent;
 import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.storage.LocalStorage;
 import com.tiago.money.money.bo.LancamentoBO;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.ResumoLancamentoTO;
 import net.sf.jasperreports.engine.JRException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -34,6 +37,16 @@ public class LancamentoResource {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+    
+    @Autowired
+    private LocalStorage localStorage;
+    
+    @PostMapping(value = "/anexo")
+    @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') AND #aouth2.hasScope('write') ")
+    public ResponseEntity<Void> anexar(@RequestParam("anexo") MultipartFile file) {
+    	this.localStorage.store(file);
+    	return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @GetMapping(value = "/relatorios/por-pessoa")
     @PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') AND #aouth2.hasScope('read')")
