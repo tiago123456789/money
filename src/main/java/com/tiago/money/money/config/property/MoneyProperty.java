@@ -9,6 +9,7 @@ public class MoneyProperty {
 
     private final Seguranca seguranca = new Seguranca();
     private final Email email = new Email();
+    private final S3 s3 = new S3();
     private String originPermission = "*";
 
     public Email getEmail() {
@@ -19,12 +20,47 @@ public class MoneyProperty {
         return originPermission;
     }
 
+    public S3 getS3() {
+        return this.s3;
+    }
+
     public void setOriginPermission(String originPermission) {
         this.originPermission = originPermission;
     }
 
     public Seguranca getSeguranca() {
         return seguranca;
+    }
+
+    public static class S3 {
+
+        private String clientId;
+        private String clientSecret;
+        private String bucketName = "tiago-dev-money";
+
+        public String getBucketName() {
+            return bucketName;
+        }
+
+        public void setBucketName(String bucketName) {
+            this.bucketName = bucketName;
+        }
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
+        }
+
+        public String getClientSecret() {
+            return clientSecret;
+        }
+
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+        }
     }
 
     public static class Seguranca {
