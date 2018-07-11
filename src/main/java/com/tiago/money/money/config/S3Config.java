@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.Tag;
 import com.amazonaws.services.s3.model.lifecycle.LifecycleFilter;
 import com.amazonaws.services.s3.model.lifecycle.LifecycleTagPredicate;
 import com.tiago.money.money.config.property.MoneyProperty;
+import com.tiago.money.money.storage.s3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ public class S3Config {
 
     @Autowired
     private MoneyProperty moneyProperty;
+
+    @Autowired
+    private S3Service s3Service;
 
     @Bean
     public AmazonS3 amazonS3() {
@@ -33,22 +37,12 @@ public class S3Config {
                                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                                 .build();
 
-        this.criarBucketCasoNaoExista(this.moneyProperty.getS3().getBucketName(), amazonS3);
+        this.s3Service.criarBucket(this.moneyProperty.getS3().getBucketName(), amazonS3);
         this.aplicarRegraDeExpiracaoArquivosS3(amazonS3);
         return amazonS3;
     }
 
-
-    private void criarBucketCasoNaoExista(String nomeBucket, AmazonS3 amazonS3) {
-
-        if (!amazonS3.doesBucketExistV2(nomeBucket)) {
-            amazonS3.createBucket(new CreateBucketRequest(nomeBucket));
-        }
-    }
-
-
     private void aplicarRegraDeExpiracaoArquivosS3(AmazonS3 amazonS3) {
-
         BucketLifecycleConfiguration.Rule rule = new BucketLifecycleConfiguration.Rule()
                 .withId("Regra de expiração de arquivos temporários")
                 .withFilter(new LifecycleFilter(
@@ -57,10 +51,6 @@ public class S3Config {
                 .withExpirationInDays(1)
                 .withStatus(BucketLifecycleConfiguration.ENABLED);
 
-        BucketLifecycleConfiguration configuration = new BucketLifecycleConfiguration()
-                .withRules(rule);
-
-        amazonS3.setBucketLifecycleConfiguration(
-                this.moneyProperty.getS3().getBucketName(), configuration);
+        this.s3Service.aplicarRegraExpiracaoEmObjetosS3(rule, amazonS3);
     }
 }
