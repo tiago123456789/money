@@ -53,6 +53,10 @@ public class Lancamento {
     @Column(name = "tipo_lancamento")
     private TipoLancamento tipoLancamento;
 
+    private String anexo;
+
+    private String urlAnexo;
+
     @JsonIgnore
     public boolean isReceita() {
         return TipoLancamento.RECEITA.equals(this.tipoLancamento);
@@ -128,6 +132,22 @@ public class Lancamento {
 
     public void setTipoLancamento(TipoLancamento tipoLancamento) {
         this.tipoLancamento = tipoLancamento;
+    }
+
+    public String getAnexo() {
+        return anexo;
+    }
+
+    public void setAnexo(String anexo) {
+        this.anexo = anexo;
+    }
+
+    public String getUrlAnexo() {
+        return urlAnexo;
+    }
+
+    public void setUrlAnexo(String urlAnexo) {
+        this.urlAnexo = urlAnexo;
     }
 
     @Override

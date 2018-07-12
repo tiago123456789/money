@@ -38,13 +38,10 @@ public class LancamentoResource {
     @Autowired
     private ApplicationEventPublisher publisher;
     
-    @Autowired
-    private LocalStorage localStorage;
-    
     @PostMapping(value = "/anexo")
     @PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') AND #aouth2.hasScope('write') ")
     public ResponseEntity<Void> anexar(@RequestParam("anexo") MultipartFile file) {
-    	this.localStorage.store(file);
+        this.lancamentoBO.armazenarArquivo(file);
     	return ResponseEntity.status(HttpStatus.OK).build();
     }
 

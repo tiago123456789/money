@@ -6,6 +6,7 @@ import com.tiago.money.money.model.Lancamento;
 import com.tiago.money.money.model.Pessoa;
 import com.tiago.money.money.repository.LancamentoRepository;
 import com.tiago.money.money.repository.filter.LancamentoFilter;
+import com.tiago.money.money.storage.Storage;
 import com.tiago.money.money.to.LancamentoEstatisticaPorCategoria;
 import com.tiago.money.money.to.LancamentoEstatisticaPorDia;
 import com.tiago.money.money.to.LancamentoEstatisticaPorPessoa;
@@ -17,9 +18,11 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -36,6 +39,14 @@ public class LancamentoBO {
 
     @Autowired
     private CategoriaBO categoriaBO;
+
+    @Autowired
+    @Qualifier(value = "s3")
+    private Storage serviceStorage;
+
+    public void armazenarArquivo(MultipartFile arquivo) {
+        this.serviceStorage.store(arquivo);
+    }
 
     public List<Lancamento> buscarLancamentoVencidosAteDataAtual() {
         return this.lancamentoRepository
@@ -70,7 +81,10 @@ public class LancamentoBO {
                 throw new PessoaInativaException("Pessoa está inativa, por isso não pode ser associada a um lançamento!");
             }
 
-            return this.lancamentoRepository.save(lancamento);
+            Lancamento lancamentoSalvo = this.lancamentoRepository.save(lancamento);
+            this.serviceStorage.maintainFile(lancamentoSalvo.getAnexo());
+
+            return lancamentoSalvo;
         } catch (NaoEncontradoException e) {
             throw new NaoEncontradoException(e);
         }

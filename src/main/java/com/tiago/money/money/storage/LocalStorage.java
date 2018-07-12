@@ -4,10 +4,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
+@Qualifier(value = "local")
 public class LocalStorage implements Storage {
 	
 	private String pathDirStorageDefault = "/home/tiago/Documentos";
@@ -23,6 +26,11 @@ public class LocalStorage implements Storage {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public void maintainFile(String file) {
+		throw new NotImplementedException("Método não implementado");
 	}
 
 }
