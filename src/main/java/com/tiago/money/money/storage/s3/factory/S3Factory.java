@@ -34,6 +34,10 @@ public class S3Factory {
         return putObjectRequest;
     }
 
+    public static DeleteObjectRequest getDeleteObjectRequest(String nameBucket, String object) {
+        return new DeleteObjectRequest(nameBucket, object);
+    }
+
     public static ObjectTagging getObjectTag(String nameTag, String situationTag) {
         return new ObjectTagging(Arrays.asList(new Tag(nameTag, situationTag)));
     }

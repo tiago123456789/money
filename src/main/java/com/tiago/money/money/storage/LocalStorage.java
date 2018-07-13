@@ -1,5 +1,6 @@
 package com.tiago.money.money.storage;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,6 +27,12 @@ public class LocalStorage implements Storage {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public void delete(String file) {
+		String pathFile = this.pathDirStorageDefault + file;
+		File deletadorFile = new File(pathFile);
+		deletadorFile.delete();
 	}
 
 	@Override

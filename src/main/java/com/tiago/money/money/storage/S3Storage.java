@@ -1,11 +1,13 @@
 package com.tiago.money.money.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.tiago.money.money.config.property.MoneyProperty;
 import com.tiago.money.money.storage.s3.factory.S3Factory;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -41,6 +43,13 @@ public class S3Storage implements Storage {
 		} catch (IOException e) {
 			throw new RuntimeException("Não foi possível armazenar arquivo no s3.");
 		}
+	}
+
+	public void delete(String file) {
+		DeleteObjectRequest deleteObjectRequest = S3Factory
+				.getDeleteObjectRequest(this.moneyProperty.getS3().getBucketName(), file);
+
+		this.amazonS3.deleteObject(deleteObjectRequest);
 	}
 
 	public void maintainFile(String object) {

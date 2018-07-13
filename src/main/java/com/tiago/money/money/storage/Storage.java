@@ -6,4 +6,5 @@ public interface Storage {
 	
 	void store(MultipartFile file);
 	void maintainFile(String file);
+	void delete(String file);
 }
