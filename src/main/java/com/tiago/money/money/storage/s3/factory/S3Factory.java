@@ -41,4 +41,8 @@ public class S3Factory {
     public static ObjectTagging getObjectTag(String nameTag, String situationTag) {
         return new ObjectTagging(Arrays.asList(new Tag(nameTag, situationTag)));
     }
+
+    public static String getUrlObject(String bucket, String nameObject) {
+        return "https://s3-us-west-2.amazonaws.com/" + bucket + "/" + nameObject;
+    }
 }

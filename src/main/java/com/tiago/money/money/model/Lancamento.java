@@ -2,6 +2,7 @@ package com.tiago.money.money.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tiago.money.money.repository.listener.LancamentoListener;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.NumberFormat;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@EntityListeners(value = {LancamentoListener.class })
 @Entity
 @Table(name = "lancamentos")
 @JsonInclude(JsonInclude.Include.NON_NULL)
